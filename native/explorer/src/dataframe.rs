@@ -136,12 +136,14 @@ pub fn df_to_csv_file(
     filename: &str,
     has_headers: bool,
     delimiter: u8,
+    // quote: u8,
 ) -> Result<(), ExplorerError> {
     df_read!(data, df, {
         let mut f = File::create(filename)?;
         CsvWriter::new(&mut f)
             .has_header(has_headers)
             .with_delimiter(delimiter)
+            .with_quoting_char(b'"')
             .finish(&mut df.clone())?;
         Ok(())
     })
@@ -511,8 +513,8 @@ pub fn df_drop_duplicates(
 ) -> Result<ExDataFrame, ExplorerError> {
     df_read!(data, df, {
         let new_df = match maintain_order {
-            false => df.distinct(Some(&subset), DistinctKeepStrategy::First)?,
-            true => df.distinct_stable(Some(&subset), DistinctKeepStrategy::First)?,
+            false => df.unique(Some(&subset), UniqueKeepStrategy::First)?,
+            true => df.unique_stable(Some(&subset), UniqueKeepStrategy::First)?,
         };
         Ok(ExDataFrame::new(new_df))
     })

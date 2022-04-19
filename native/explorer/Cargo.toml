@@ -22,7 +22,8 @@ thiserror = "1"
 mimalloc = { version = "*", default-features = false }
 
 [dependencies.polars]
-version = "0.20.0"
+git = "https://github.com/pola-rs/polars.git"
+rev = "3ba710641c9b52a412263879d71a601d5e130238"
 default-features = false
 features = [
   "cross_join",
